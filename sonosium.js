@@ -12,7 +12,7 @@ function setup() {
   else{
   createCanvas(windowWidth, windowWidth, WEBGL);
   }
-  //background(0);
+  background(255);
   mic = new p5.AudioIn();
   mic.start();
   fft = new p5.FFT();
@@ -22,11 +22,18 @@ function setup() {
     blob=new blobb(i, 100, width/30);
     blobs.push(blob);
   }
-  
+}
+function windowResized(){
+  if (windowWidth>=windowHeight){
+  createCanvas(windowHeight, windowHeight, WEBGL);
+  }
+  else{
+  createCanvas(windowWidth, windowWidth, WEBGL);
+  }
+  background(255);
 }
 let ctr=0;
 function draw() {
-  //background(255);
   lights();
   //translate(-width/2,0);
   spectrum = fft.analyze();
