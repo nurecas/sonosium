@@ -3,20 +3,26 @@ let amt, startColor, newColor;
 var prevX=0, prevY=0;
 var blobs=[];
 let spectrum;
-var COLORS = [ '#581845', '#900C3F', '#C70039', '#C70039', '#FFC300', '#DAF7A6' ];
+let colorCtr=0;
+var COLORS = [   '#C70039', '#581845', '#FFC300', '#900C3F', '#DAF7A6', '#C70039' ];
 function setup() {
-  createCanvas(1400, 800, WEBGL);
-  noFill();
-  background(255);
+  if (windowWidth>=windowHeight){
+  createCanvas(windowHeight, windowHeight, WEBGL);
+  }
+  else{
+  createCanvas(windowWidth, windowWidth, WEBGL);
+  }
+  //background(0);
   mic = new p5.AudioIn();
   mic.start();
   fft = new p5.FFT();
   fft.setInput(mic);
   spectrum = fft.analyze();
-  for (i = 200; i < 1024; i+=100) {
-    blob=new blobb(i, 400, 20);
+  for (i = 0; i < 1024; i+=100) {
+    blob=new blobb(i, 100, width/30);
     blobs.push(blob);
   }
+  
 }
 let ctr=0;
 function draw() {
@@ -25,7 +31,7 @@ function draw() {
   //translate(-width/2,0);
   spectrum = fft.analyze();
   let waveform = fft.waveform();
-  for (i = 200; i < spectrum.length; i+=100) {
+  for (i = 0; i < spectrum.length; i+=100) {
     d= map(spectrum[i], 0, 255, 0, 1);
     blobs[ctr].move(d);
     blobs[ctr].display();
@@ -33,12 +39,6 @@ function draw() {
   }
   ctr=0;
 }
-function mouseClicked() {
-  if (getAudioContext().state !== 'running') {
-    getAudioContext().resume();
-  }
-}
-
 class blobb {
   constructor(x, y, dia) {
     this.x = x;
@@ -48,19 +48,33 @@ class blobb {
     this.inc=0;
     this.vel=0;
     this.spacing=x;
-    this.color=random(COLORS);
+    if (colorCtr<=5) {
+      this.color=COLORS[colorCtr];
+      colorCtr++;
+    } else {
+      colorCtr=1;
+      this.color=COLORS[colorCtr];
+      colorCtr++;
+    }
     this.pDis=0;
   }
 
   move(dist) {
+    if (dist>0.3) {
+      dist=0.2;
+    } else if (dist>0.1&&dist<=0.3) {
+      dist=-0.2;
+    } else {
+      dist=0;
+    }
     if (this.pDis>=dist) {
       this.inc+=dist;
     } else {
       this.inc-=dist;
     }
     this.pDis=dist;
-    this.x = sin(this.inc/10)*100*this.spacing/300;
-    this.y = cos(this.inc/10)*100*this.spacing/300;
+    this.x = sin(this.inc/10)*100*this.spacing/300*(width/800);
+    this.y = cos(this.inc/10)*100*this.spacing/300*(width/800);
   }
 
   display() {
@@ -70,7 +84,26 @@ class blobb {
     push();
     translate(this.x, this.y, 0);
     ambientMaterial(color(c));
-    sphere(30);
+    sphere(this.diameter);
     pop();
   }
+}
+function touchStarted() {
+ if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+function mouseClicked() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+function saveFile() {
+    save('Sonosium.jpg');
+}
+
+function keyPressed() {
+    if (keyCode === ENTER) {
+        saveFile();
+    }
 }
