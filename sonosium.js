@@ -6,7 +6,7 @@ var blobs = [];
 let spectrum;
 let colorCtr = 0;
 var COLORS = ['#C70039', '#581845', '#FFC300', '#900C3F', '#DAF7A6', '#C70039'];
-
+let doOnce=false;
 function setup() {
     if (windowWidth >= windowHeight) {
         createCanvas(windowHeight, windowHeight, WEBGL);
@@ -36,6 +36,12 @@ function windowResized() {
 let ctr = 0;
 
 function draw() {
+  if (doOnce){
+    if (getAudioContext().state !== 'running') {
+        getAudioContext().resume();
+    }
+    doOnce=false;
+  }
     lights();
     //translate(-width/2,0);
     spectrum = fft.analyze();
@@ -95,18 +101,6 @@ class blobb {
         ambientMaterial(color(c));
         sphere(this.diameter);
         pop();
-    }
-}
-
-function touchStarted() {
-    if (getAudioContext().state !== 'running') {
-        getAudioContext().resume();
-    }
-}
-
-function mouseClicked() {
-    if (getAudioContext().state !== 'running') {
-        getAudioContext().resume();
     }
 }
 
