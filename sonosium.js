@@ -51,7 +51,7 @@ function draw() {
   noStroke();
   fill(231, 222, 212);
   rect(width*0.33,height*0.8, width/3, width/10);
-  fill(150,0,0);
+  fill(190,48,51);
   noStroke();
   textSize(width/20);
   textStyle(BOLD);
