@@ -39,6 +39,10 @@ function windowResized() {
     createCanvas(windowWidth, windowWidth);
   }
   background(255);
+  stroke(120);
+  strokeWeight(width/100);
+  fill(231, 222, 212);
+  rect(0, 0, width, height);
 }
 let ctr = 0;
 
@@ -56,7 +60,7 @@ function draw() {
   textSize(width/60);
   textStyle(NORMAL);
   text(tag,width*0.422,height*0.88);
-  translate(width/2, height/2-100);
+  translate(width/2, height*0.4);
   spectrum = fft.analyze();
   let waveform = fft.waveform();
   for (i = 50; i < spectrum.length; i += 100) {
@@ -87,7 +91,7 @@ class blobb {
       colorCtr++;
     }
     this.pDis = 0;
-    this.charcoal=new charcoal(this.x, this.y, this.diameter, 6, this.color);
+    this.charcoal=new charcoal(this.x, this.y, this.diameter, width/150, this.color);
   }
 
   move(dist) {
@@ -131,7 +135,7 @@ class charcoal {
     for (var i=0; i<50; i++) {
       this.randx[i]=random(-brushSize, brushSize);
       this.randy[i]=random(-brushSize, brushSize);
-      this.pt[i]=random(2, particleSize);
+      this.pt[i]=random(0, particleSize);
     }
     this.rad=brushSize;
     this.col=colour;
