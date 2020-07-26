@@ -5,54 +5,87 @@ var prevX = 0,
 var blobs = [];
 let spectrum;
 let colorCtr = 0;
-var COLORS = ['#C70039', '#581845', '#FFC300', '#900C3F', '#DAF7A6', '#C70039'];
-let doOnce=false;
+var COLORS2 = ['#000', '#C70039', '#581845', '#FFC300', '#900C3F', '#DAF7A6', '#C70039'];
+var COLORS = ['#333', '#444', '#AAA', '#333', '#BBB', '#333'];
+var tag;
+var clicked = false;
+var cToStart;
+
+function preload() {
+    cToStart = loadImage("img/touch.png");
+}
+
 function setup() {
     if (windowWidth >= windowHeight) {
-        createCanvas(windowHeight, windowHeight, WEBGL);
+        createCanvas(windowHeight, windowHeight);
     } else {
-        createCanvas(windowWidth, windowWidth, WEBGL);
+        createCanvas(windowWidth, windowWidth);
     }
     background(255);
+    textFont("Muli");
+    //init mic input
     mic = new p5.AudioIn();
     mic.start();
     fft = new p5.FFT();
     fft.setInput(mic);
     spectrum = fft.analyze();
-    for (i = 0; i < 1024; i += 100) {
-        blob = new blobb(i, 100, width / 30);
+    //initialize blobs
+    for (i = 50; i < 1024; i += 100) {
+        blob = new blobb(i * 0.8, 100, width / 30);
         blobs.push(blob);
     }
+    stroke(120);
+    strokeWeight(width / 100);
+    fill(231, 222, 212);
+    rect(0, 0, width, height);
+    tag = random(123456789, 987654321);
 }
 
 function windowResized() {
     if (windowWidth >= windowHeight) {
-        createCanvas(windowHeight, windowHeight, WEBGL);
+        createCanvas(windowHeight, windowHeight);
     } else {
-        createCanvas(windowWidth, windowWidth, WEBGL);
+        createCanvas(windowWidth, windowWidth);
     }
     background(255);
+    stroke(120);
+    strokeWeight(width / 100);
+    fill(231, 222, 212);
+    rect(0, 0, width, height);
 }
 let ctr = 0;
 
 function draw() {
-  if (doOnce){
-    if (getAudioContext().state !== 'running') {
-        getAudioContext().resume();
-    }
-    doOnce=false;
-  }
-    lights();
-    //translate(-width/2,0);
+    noStroke();
+    fill(231, 222, 212);
+    rect(width * 0.33, height * 0.8, width / 3, width / 10);
+    fill(190, 48, 51);
+    noStroke();
+    textSize(width / 20);
+    textStyle(BOLD);
+    text("sonosium", width * 0.385, height * 0.85);
+    fill(20);
+    textSize(width / 100);
+    textStyle(NORMAL);
+    text(tag, width * 0.45, height * 0.88);
+    translate(width / 2, height * 0.4);
     spectrum = fft.analyze();
     let waveform = fft.waveform();
-    for (i = 0; i < spectrum.length; i += 100) {
+    for (i = 50; i < spectrum.length; i += 100) {
         d = map(spectrum[i], 0, 255, 0, 1);
         blobs[ctr].move(d);
         blobs[ctr].display();
         ctr++;
     }
     ctr = 0;
+    fill(231, 222, 212);
+    ellipse(0, 0, width / 5, width / 5);
+    if (!clicked) {
+        fill(255);
+        noStroke();
+        rect(-width / 2, -height * 0.4, width, height);
+        image(cToStart, 0, 0);
+    }
 }
 class blobb {
     constructor(x, y, dia) {
@@ -72,6 +105,7 @@ class blobb {
             colorCtr++;
         }
         this.pDis = 0;
+        this.charcoal = new charcoal(this.x, this.y, this.diameter, width / 150, this.color);
     }
 
     move(dist) {
@@ -95,12 +129,55 @@ class blobb {
     display() {
         let c = this.color;
         fill(color(c));
+        this.charcoal.show(this.x, this.y, this.color);
+    }
+}
+
+class charcoal {
+    constructor(x, y, brushSize, particleSize, colour) {
+        this.x = x;
+        this.y = y;
+        this.randx = [];
+        this.randy = [];
+        this.pt = [];
+        for (var i = 0; i < 50; i++) {
+            this.randx[i] = random(-brushSize, brushSize);
+            this.randy[i] = random(-brushSize, brushSize);
+            this.pt[i] = random(0, particleSize);
+        }
+        this.rad = brushSize;
+        this.col = colour;
+    }
+    show(x, y, col) {
         noStroke();
-        push();
-        translate(this.x, this.y, 0);
-        ambientMaterial(color(c));
-        sphere(this.diameter);
-        pop();
+        fill(col);
+        for (var i = 0; i < 50; i++) {
+            ellipse(x + this.randx[i], y + this.randy[i], this.pt[i] + 5, this.pt[i]);
+        }
+    }
+}
+
+function touchStarted() {
+    if (getAudioContext().state !== 'running') {
+        getAudioContext().resume();
+        clicked = true;
+        background(255);
+        stroke(120);
+        strokeWeight(width / 100);
+        fill(231, 222, 212);
+        rect(-width / 2, -height * 0.4, width, height);
+    }
+}
+
+function mouseClicked() {
+    if (getAudioContext().state !== 'running') {
+        getAudioContext().resume();
+        clicked = true;
+        background(255);
+        stroke(120);
+        strokeWeight(width / 100);
+        fill(231, 222, 212);
+        rect(-width / 2, -height * 0.4, width, height);
     }
 }
 
