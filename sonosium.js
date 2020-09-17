@@ -109,11 +109,9 @@ class blobb {
     }
 
     move(dist) {
-        if (dist > 0.5) {
-            dist = dist;
-        } else if (dist > 0.1 && dist <= 0.5) {
+        if (dist > 0.1 && dist <= 0.5) {
             dist = -dist;
-        } else {
+        } else if (dist <= 0.1) {
             dist = 0;
         }
         if (this.pDis >= dist) {
