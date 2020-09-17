@@ -30,7 +30,7 @@ function setup() {
     fft.setInput(mic);
     spectrum = fft.analyze();
     //initialize blobs
-    for (i = 20; i < 60; i += 1) {
+    for (i = 0; i < 150; i += 10) {
         blob = new blobb(i * 0.8, 100, width / 30);
         blobs.push(blob);
     }
@@ -71,7 +71,7 @@ function draw() {
     translate(width / 2, height * 0.4);
     spectrum = fft.analyze();
     let waveform = fft.waveform();
-    for (i = 20; i < 60; i += 1) {
+    for (i = 0; i < 150; i += 10) {
         d = map(spectrum[i], 0, 255, 0, 1);
         blobs[ctr].move(d);
         blobs[ctr].display();
@@ -84,7 +84,7 @@ function draw() {
         fill(255);
         noStroke();
         rect(-width / 2, -height * 0.4, width, height);
-        image(cToStart, 0, 0);
+        image(cToStart, 0, 0, 50, 80);
     }
 }
 class blobb {
@@ -123,8 +123,8 @@ class blobb {
         }
         this.pDis = dist;
         this.inc += dist;
-        this.x = sin(this.inc / 10) * 100 * this.spacing / 300 * (width / 60);
-        this.y = cos(this.inc / 10) * 100 * this.spacing / 300 * (width / 60);
+        this.x = sin(this.inc / 10) * 100 * this.spacing / 300 * (width / 100);
+        this.y = cos(this.inc / 10) * 100 * this.spacing / 300 * (width / 100);
     }
 
     display() {
