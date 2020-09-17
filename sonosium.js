@@ -30,7 +30,7 @@ function setup() {
     fft.setInput(mic);
     spectrum = fft.analyze();
     //initialize blobs
-    for (i = 50; i < 1024; i += 100) {
+    for (i = 0; i < 1024; i += 100) {
         blob = new blobb(i * 0.8, 100, width / 30);
         blobs.push(blob);
     }
@@ -71,7 +71,7 @@ function draw() {
     translate(width / 2, height * 0.4);
     spectrum = fft.analyze();
     let waveform = fft.waveform();
-    for (i = 50; i < spectrum.length; i += 100) {
+    for (i = 0; i < spectrum.length; i += 100) {
         d = map(spectrum[i], 0, 255, 0, 1);
         blobs[ctr].move(d);
         blobs[ctr].display();
