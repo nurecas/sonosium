@@ -123,8 +123,8 @@ class blobb {
         }
         this.pDis = dist;
         this.inc += dist;
-        this.x = sin(this.inc / 10) * 100 * this.spacing / 300 * (width / 100);
-        this.y = cos(this.inc / 10) * 100 * this.spacing / 300 * (width / 100);
+        this.x = sin(this.inc / 10) * 100 * this.spacing / 300 * (width / 120);
+        this.y = cos(this.inc / 10) * 100 * this.spacing / 300 * (width / 120);
     }
 
     display() {
