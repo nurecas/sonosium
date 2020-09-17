@@ -109,6 +109,7 @@ class blobb {
     }
 
     move(dist) {
+        dist = dist / 2;
         if (dist > 0.1 && dist <= 0.5) {
             dist = -dist;
         } else if (dist <= 0.1) {
